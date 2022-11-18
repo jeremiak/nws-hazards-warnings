@@ -1,0 +1,24 @@
+name: Scrape all NWS hazards and warnings
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '35 23 * * *'
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Scrape all NWS hazards and warnings
+      run: |-
+        curl https://www.wrh.noaa.gov/map/json/WR_All_Hazards.json | jq . > all-hazards-warnings.json
+    - name: Commit and push if it changed
+      run: |-
+        git config user.name "Automated"
+        git config user.email "actions@users.noreply.github.com"
+        git add images/*.gif
+        timestamp=$(date -u)
+        git commit -m "Latest data: ${timestamp}" || exit 0
+        git push
