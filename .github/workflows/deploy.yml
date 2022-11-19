@@ -20,7 +20,7 @@ jobs:
         pip install datasette git-history
     - name: Create and deploy datasette
       run: |-
-        rm *.db
+        rm -f all-hazards-warnings.db
         git-history file all-hazards-warnings.db all-hazards-warnings.json \
           --id "CAP_ID" \
           --namespace 'all-hazards-warnings' \
