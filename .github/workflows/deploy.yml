@@ -31,7 +31,7 @@ jobs:
               d = feature["properties"]
               d["geometry"] = feature["geometry"]
               if (d["CAP_ID"]):
-                d["modified_CAP_ID"] = re.sub(r".\d+$", "", d["CAP_ID"])
+                d["modified_CAP_ID"] = re.sub(r".\d+.\d+$", "", d["CAP_ID"])
                 features.append(d)
             return features
             ' --id "modified_CAP_ID" \
