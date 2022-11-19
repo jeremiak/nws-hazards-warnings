@@ -24,6 +24,7 @@ jobs:
         git-history file all-hazards-warnings.db all-hazards-warnings.json \
           --id "CAP_ID" \
           --namespace 'all-hazards-warnings' \
+          --ignore-duplicate-ids \
           --convert '
             data = json.loads(content)
             features = []
@@ -31,6 +32,5 @@ jobs:
               d = feature["properties"]
               d["geometry"] = feature["geometry"]
               yield d
-            ' \
-          --ignore-duplicate-ids
+            '
         datasette publish fly all-hazards-warnings.db --app nws-all-hazards-warnings --install datasette-leaflet-geojson
