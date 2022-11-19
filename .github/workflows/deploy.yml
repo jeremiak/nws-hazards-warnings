@@ -31,5 +31,6 @@ jobs:
               d = feature["properties"]
               d["geometry"] = feature["geometry"]
               yield d
-            '
+            ' \
+          --ignore-duplicate-ids
         datasette publish fly all-hazards-warnings.db --app nws-all-hazards-warnings --install datasette-leaflet-geojson
