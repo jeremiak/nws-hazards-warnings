@@ -1,0 +1,35 @@
+name: Deploy with Datasette
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+env:
+  FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v1
+    - uses: superfly/flyctl-actions/setup-flyctl@master
+    - name: Install dependencies
+      run: |-
+        python -m pip install --upgrade pip
+        pip install datasette
+    - name: Create and deploy datasette
+      run: |-
+        rm -f *.db
+        git-history file all-hazards-warnings.db all-hazards-warnings.json \
+          --id "CAP_ID" \
+          --namespace 'all-hazards-warnings' \
+          --convert '
+            data = json.loads(content)
+            features = []
+            for feature in data["features"]:
+              d = feature["properties"]
+              d["geometry"] = feature["geometry"]
+              yield d
+            '
+        datasette publish fly all-hazards-warnings.db --app nws-all-hazards-warnings --install datasette-leaflet-geojson
