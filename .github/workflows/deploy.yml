@@ -23,13 +23,15 @@ jobs:
         rm -f all-hazards-warnings.db
         git-history file all-hazards-warnings.db all-hazards-warnings.json \
           --id "CAP_ID" \
-          --namespace 'all-hazards-warnings' \
+          --namespace 'hazards_warnings' \
           --convert '
             data = json.loads(content)
             features = []
             for feature in data["features"]:
               d = feature["properties"]
               d["geometry"] = feature["geometry"]
-              yield d
+              if (d["CAP_ID"]):
+                features.append(d)
+            return features
             '
         datasette publish fly all-hazards-warnings.db --app nws-all-hazards-warnings --install datasette-leaflet-geojson
