@@ -20,11 +20,10 @@ jobs:
         pip install datasette git-history
     - name: Create and deploy datasette
       run: |-
-        rm -f *.db
+        rm *.db
         git-history file all-hazards-warnings.db all-hazards-warnings.json \
           --id "CAP_ID" \
           --namespace 'all-hazards-warnings' \
-          --ignore-duplicate-ids \
           --convert '
             data = json.loads(content)
             features = []
